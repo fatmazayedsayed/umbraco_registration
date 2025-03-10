@@ -1,0 +1,30 @@
+﻿@using Umbraco.Cms.Core.Models
+@inherits UmbracoViewPage<umbraco_registration.ViewModels.ViewComponents.RecentBlogPostsViewModel>
+<h4 class="fst-italic">@Model.Heading</h4>
+<ul class="list-unstyled">
+    @foreach (var blogPost in Model.BlogPosts)
+    {
+        <li>
+            <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="@blogPost.Url()">
+                <img class="card-img-top" src="@(blogPost.Value<MediaWithCrops>("image").GetCropUrl("smallThumbnail"))" role="img" preserveAspectRatio="xMidYMid slice" focusable="false" />
+                <div class="col-lg-8">
+                    <h6 class="mb-0">
+
+                        @{
+                            if (blogPost.HasValue("heroHeading"))
+                            {
+                                @blogPost.Value("heroHeading")
+                            }
+                            else
+                            {
+                                @blogPost.Name
+                            }
+                        }
+                    </h6>
+                    <small class="text-body-secondary">@(@blogPost.Value<DateTime>("displayDate").ToString("D"))</small>
+                </div>
+            </a>
+        </li>
+    }
+</ul>
+

@@ -1,0 +1,48 @@
+﻿@using Umbraco.Cms.Core.PropertyEditors.ValueConverters
+@using Umbraco.Cms.Core.Models.Blocks
+@using umbraco_registration.Controllers
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockListItem>
+@{
+    var content = Model.Content;
+    var settings = Model.Settings;
+
+    var backgroundColour = string.Empty;
+    if (settings != null)
+    {
+        backgroundColour = $"bg-{settings.Value<ColorPickerValueConverter.PickedColor>("backgroundColour")?.Label.ToLower().Replace(" ", "-")}";
+    }
+
+    var submitButtonLabel = content.HasValue("submitButtonLabel") ? content.Value<string>("submitButtonLabel") : "Submit";
+
+    SmidgeHelper.RequiresJs("/scripts/formvalidation.js");
+}
+<div class="py-5 @backgroundColour">
+    <div class="container">
+        <partial name="~/Views/Partials/blocklist/Components/blockHeading.cshtml" model="Model" />
+        @if (ViewData.ModelState.Any(x => x.Value.Errors.Any()))
+        {
+            <div class="alert alert-danger mt-3" role="alert">
+                @Html.ValidationSummary()
+            </div>
+        } 
+        <form our-controller="Form" our-action="@nameof(FormController.SubmitForm)" class="needs-validation" method="post" novalidate>
+            <div class="row justify-content-center g-3 mt-3">
+                @await Html.GetBlockListHtmlAsync(content.Value<BlockListModel>("formFields"), "form")
+                @await Html.GetBlockListHtmlAsync(content.Value<BlockListModel>("message"), "form")
+                <div class="mb-3 visually-hidden">
+                    <label for="031660d1657942ba8675daf94f016b6e"></label>
+                    <input type="text" name="031660d1657942ba8675daf94f016b6e" autocomplete="off" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-grid">
+                        <input type="hidden" name="formId" value="@content.Key"/>
+                        <input type="hidden" name="085e5604d16a4719ba3a4415beb1bcea" value="@DateTime.Now.Ticks" />
+                        <button type="submit" class="btn btn-primary">@submitButtonLabel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+﻿@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models
+@using UmbCheckout.Shared.Extensions
+@using UmbCheckout.Stripe.ViewComponents
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = "_Master.cshtml";
+}
+<partial name="Partials/Hero" />
+<div class="py-5 bg-body-tertiary">
+    <div class="container">
+        @if (TempData[UmbCheckout.Shared.Consts.TempData.UmbCheckoutAddedToBasket] != null)
+        {
+            var lineItemContent = Umbraco.Content((Guid)TempData[UmbCheckout.Shared.Consts.TempData.UmbCheckoutAddedToBasket]);
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="alert alert-success">
+                        Successfully added @(lineItemContent != null && lineItemContent.HasTemplate() ? lineItemContent?.Name : $"{lineItemContent?.Parent?.Name} - {lineItemContent?.Name}") to basket.
+                    </div>
+                </div>
+            </div>
+        }
+        <vc:stripe-basket table-css-class="table table-striped table-hover" checkout-button-css-class="btn btn-primary" increase-button-css-class="btn btn-outline-secondary" reduce-button-css-class="btn btn-outline-secondary" remove-button-css-class="btn btn-outline-secondary"></vc:stripe-basket>
+    </div>
+</div>

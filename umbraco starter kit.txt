@@ -1,0 +1,10 @@
+# Ensure we have the latest Community templates
+dotnet new install UmbCheckout.StarterKit.Stripe --force
+
+# Create solution/project
+dotnet new sln --name "umbraco_registration"
+dotnet new umbcheckout.starterkit.stripe --force -n "umbraco_registration" 
+dotnet sln add "umbraco_registration"
+
+dotnet run --project "umbraco_registration"
+#Running

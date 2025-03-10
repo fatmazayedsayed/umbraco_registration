@@ -1,0 +1,11 @@
+﻿@using umbraco_registration.Extensions
+@using Umbraco.Cms.Core.Strings
+@inherits UmbracoViewPage<umbraco_registration.ViewModels.ViewComponents.BlogCategoriesViewModel>
+@inject IShortStringHelper ShortStringHelper
+<h4 class="fst-italic">@Model.Heading</h4>
+<ul class="list-unstyled mb-0">
+    @foreach (var category in Model.Categories)
+    {
+        <li><a href="@Umbraco.AssignedContentItem.GetBlogPage().Url()category/@category.ToUrlSegment(ShortStringHelper)/">@category</a></li>
+    }
+</ul>

@@ -1,0 +1,34 @@
+﻿@using Umbraco.Cms.Core.PropertyEditors.ValueConverters
+@using Umbraco.Cms.Core.Strings
+@using Umbraco.Cms.Core.Models
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockListItem>
+@{
+    var content = Model.Content;
+    var settings = Model.Settings;
+
+    var backgroundColour = string.Empty;
+    var imagePosition = string.Empty;
+    var imageHasShadow = false;
+    if (settings != null)
+    {
+        backgroundColour = $"bg-{settings.Value<ColorPickerValueConverter.PickedColor>("backgroundColour")?.Label.ToLower().Replace(" ", "-")}";
+        imagePosition = settings.HasProperty("imagePosition") && settings.HasValue("imagePosition") ? settings.Value<string>("imagePosition") : "left";
+        imageHasShadow = settings.Value<bool>("imageHasShadow");
+    }
+}
+<div class="py-5 @backgroundColour">
+    <div class="container">
+        <partial name="~/Views/Partials/blocklist/Components/blockHeading.cshtml" model="Model" />
+        <div class="row justify-content-center g-3 mt-3 @Html.If(imagePosition == "right", "flex-row-reverse")">
+            @if (content.HasValue("image"))
+            {
+                <div class="col-12 col-md-6">
+                    <img src="@(content.Value<MediaWithCrops>("image")?.GetCropUrl("image"))." class="d-block mx-lg-auto img-fluid rounded-2 @Html.If(imageHasShadow, "shadow")" alt="@(content.Value<MediaWithCrops>("image").Value("alt"))" width="700" height="500" loading="lazy">
+                </div>
+            }
+            <div class="col-12 @Html.If(content.HasValue("image"), "col-md-6", "col-md-10") @Html.If(imagePosition == "right", "pe-5", "ps-5")">
+                @(content.Value<IHtmlEncodedString>("text"))
+            </div>
+        </div>
+    </div>
+</div>

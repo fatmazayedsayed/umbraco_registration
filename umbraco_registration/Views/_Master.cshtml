@@ -1,0 +1,53 @@
+﻿@using MetaMomentum.Models
+@using Microsoft.Extensions.Options
+@using umbraco_registration.Extensions
+@using Umbraco.Cms.Core.Configuration.Models
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@inject IOptions<HostingSettings> HostingSettings
+@{
+    Layout = null;
+
+    var debugMode = HostingSettings.Value.Debug;
+}
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+<head>
+    @await RenderSectionAsync("HeadStart", false)
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <partial name="Partials/MetaMomentum/RenderMetaTags" model="@(Model.Value<MetaValues>("metaData"))" />
+
+    @await SmidgeHelper.CssHereAsync("bootstrap-css-bundle", debug: debugMode)
+    @await SmidgeHelper.CssHereAsync("custom-css-bundle", debug: debugMode)
+    @await SmidgeHelper.CssHereAsync(debug: debugMode)
+    @await RenderSectionAsync("HeadEnd", false)
+</head>
+<body>
+    @await RenderSectionAsync("BodyStart", false)
+
+    <partial name="Partials/nav/TopNavigation" />
+
+    @RenderBody()
+    <footer class="py-5 bg-dark-subtle">
+        <div class="container">
+            <div class="row">
+                <partial name="Partials/nav/FooterNavigation" />
+
+                <div class="col-md-5 offset-md-1 mb-3">
+                    <partial name="Partials/nav/MailChimpSignup" />
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+                <p>@(Model.GetSiteSettings().Value<string>("copyright").Replace("[[SITENAME]]", Model.GetSiteSettings().Value<string>("siteName")).Replace("[[YEAR]]", DateTime.Now.Year.ToString()))</p>
+                <partial name="Partials/nav/SocialIcons" />
+            </div>
+        </div>
+    </footer>
+    @await SmidgeHelper.JsHereAsync(debug: debugMode)
+    @await SmidgeHelper.JsHereAsync("bootstrap-js-bundle", debug: debugMode)
+    @await SmidgeHelper.CssHereAsync("custom-js-bundle", debug: debugMode)
+    @await RenderSectionAsync("BodyEnd", false)
+</body>
+</html>

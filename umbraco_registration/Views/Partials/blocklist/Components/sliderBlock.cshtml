@@ -1,0 +1,61 @@
+﻿@using Umbraco.Cms.Core.PropertyEditors.ValueConverters
+@using Umbraco.Cms.Core.Strings
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockListItem>
+@{
+    var content = Model.Content;
+    var settings = Model.Settings;
+
+    var backgroundColour = string.Empty;
+    if (settings != null)
+    {
+        backgroundColour = $"bg-{settings.Value<ColorPickerValueConverter.PickedColor>("backgroundColour")?.Label.ToLower().Replace(" ", "-")}";
+    }
+
+    var slides = content.Value<IEnumerable<BlockListItem>>("slides").Select(x => x.Content).ToList();
+    var id = $"n{content.Key:N}";
+}
+<div class="py-5 @backgroundColour">
+    <div class="container">
+        <partial name="~/Views/Partials/blocklist/Components/blockHeading.cshtml" model="Model" />
+        <div class="row justify-content-center g-3 mt-3">
+            <div id="@id" class="carousel slide">
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner">
+                    @foreach (var slide in slides)
+                    {
+                        var link = slide.Value<Link>("button");
+                        <div class="carousel-item @Html.If(slide == slides.First(), "active")">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <img src="@(slide.Value<MediaWithCrops>("image").GetCropUrl("image"))." class="d-block mx-lg-auto img-fluid rounded-2 shadow" alt="@(slide.Value<MediaWithCrops>("image").Value("alt"))" width="600" height="450" loading="lazy">
+                                </div>
+                                <div class="col-md-6 d-flex align-items-center justify-content-center">
+                                    <div class="carousel-content">
+                                        <h3>@slide.Value("title")</h3>
+                                        @(slide.Value<IHtmlEncodedString>("text"))
+                                        <p>
+                                            <a model="@link.Url" target="@link.Target" class="btn btn-primary">@link.Name</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                </div>
+
+                <!-- Controls -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#@id" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#@id" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div> <!-- Carousel -->
+        </div>
+    </div>
+</div>

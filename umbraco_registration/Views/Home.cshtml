@@ -1,0 +1,36 @@
+﻿@using OurHtagEditor.Models
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.PropertyEditors.ValueConverters
+@using Umbraco.Cms.Core.Strings
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = "_Master.cshtml";
+    var backgroundColour = Model.HasValue("backgroundColour") ? $"background-color:#{Model.Value<ColorPickerValueConverter.PickedColor>("backgroundColour")};" : string.Empty;
+}
+<div class="px-4 py-5" style="@backgroundColour">
+    <div class="container">
+        <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+            <div class="col-md-10 col-sm-8 col-lg-6">
+                <img src="@(Model.Value<MediaWithCrops>("heroImage")?.GetCropUrl("heroImage"))." class="d-block mx-lg-auto img-fluid rounded-2 shadow" alt="@(Model.Value<MediaWithCrops>("heroImage").Value("alt"))" width="700" height="500" loading="lazy">
+            </div>
+            <div class="col-lg-6">
+                <div class="mx-auto bg-white bg-opacity-75 rounded-2 p-3">
+                    <headline htag="@(Model.Value<Headline>("heroHeading"))"/>
+                    @(Model.Value<HtmlEncodedString>("heroText"))
+
+                    @if (Model.HasValue("heroButtons"))
+                    {
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                            @foreach (var button in Model.Value<IEnumerable<BlockListItem>>("heroButtons")?.Select(x => x.Content))
+                            {
+                                <a href="@(button.Value<Link>("link").Url)" target="@(button.Value<Link>("link").Target)" class="btn @button.Value("type") btn-lg px-4 me-md-2">@(button.Value<Link>("link").Name)</a>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@await Html.GetBlockListHtmlAsync(Model.Value<BlockListModel>("contentBlocks"))

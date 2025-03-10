@@ -1,0 +1,11 @@
+﻿@using umbraco_registration.Extensions
+@inherits UmbracoViewPage
+<form method="post" action="@Model.GetSiteSettings().Value("mailChimpSignupURL")" target="_blank">
+    <h5>@Model.GetSiteSettings().Value("mailChimpSignupTitle")</h5>
+    <p>@Model.GetSiteSettings().Value("mailChimpSignupSubtitle")</p>
+    <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+        <label for="newsletter1" class="visually-hidden">@Umbraco.GetDictionaryValue("Email Address")</label>
+        <input id="newsletter1" type="text" class="form-control" placeholder="@Umbraco.GetDictionaryValue("Email Address Placeholder")">
+        <button class="btn btn-primary" type="submit">@Umbraco.GetDictionaryValue("Subscribe Button")</button>
+    </div>
+</form>

@@ -1,0 +1,12 @@
+﻿{
+  "javascript": [
+    "/App_Plugins/RegistrationDashboard/registrationDashboard.controller.js"
+  ],
+  "dashboards": [
+    {
+      "alias": "registrationDashboard",
+      "view": "/App_Plugins/RegistrationDashboard/registration.html",
+      "sections": [ "content" ]
+    }
+  ]
+}

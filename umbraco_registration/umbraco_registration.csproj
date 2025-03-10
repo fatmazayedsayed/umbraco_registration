@@ -1,0 +1,96 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="IISUrlRewrite.xml" />
+	  <Content Include="App_Plugins\**\*.*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+   
+
+  <ItemGroup>
+    <PackageReference Include="Bergmania.OpenStreetMap" Version="5.3.2" />
+    <PackageReference Include="Humanizer" Version="2.14.1" />
+    <PackageReference Include="LazZiya.TagHelpers" Version="6.0.2" />
+    <PackageReference Include="MetaMomentum" Version="2.2.2" />
+    <PackageReference Include="Mono.TextTemplating" Version="2.3.1" />
+    <PackageReference Include="NestingContently.Umbraco" Version="12.0.0" />
+    <PackageReference Include="NWebsec.AspNetCore.Middleware" Version="3.0.0" />
+    <PackageReference Include="Our.Umbraco.Community.Contentment" Version="4.7.0" />
+    <PackageReference Include="Our.Umbraco.ConditionalDisplayers" Version="3.4.0" />
+    <PackageReference Include="Our.Umbraco.TagHelpers" Version="1.2.0" />
+    <PackageReference Include="Our.Umbraco.TheDashboard" Version="13.0.1" />
+    <PackageReference Include="Our.Umbraco.UmbNav.Web" Version="3.0.2" />
+    <PackageReference Include="ourHtagEditor" Version="3.1.0" />
+    <PackageReference Include="Skybrud.Umbraco.Redirects" Version="13.0.5" />
+    <PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0" />
+    <PackageReference Include="UmbCheckout" Version="1.4.7" />
+    <PackageReference Include="UmbCheckout.Stripe" Version="1.4.7" />
+    <PackageReference Include="UmbCheckout.Stripe.uSync" Version="1.4.7" />
+    <PackageReference Include="UmbCheckout.uSync" Version="1.4.7" />
+    <PackageReference Include="Umbraco.Cms" Version="13.5.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Opt-in to app-local ICU to ensure consistent globalization APIs across different platforms -->
+    <PackageReference Include="Microsoft.ICU.ICU4C.Runtime" Version="72.1.0.3" />
+    <PackageReference Include="uSync" Version="13.2.6" />
+    <RuntimeHostConfigurationOption Include="System.Globalization.AppLocalIcu" Value="72.1.0.1" Condition="$(RuntimeIdentifier.StartsWith('linux')) or $(RuntimeIdentifier.StartsWith('win')) or ('$(RuntimeIdentifier)' == '' and !$([MSBuild]::IsOSPlatform('osx')))" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="App_Plugins\Contentment\backoffice\contentment\kilroy.svg" />
+    <None Include="App_Plugins\Contentment\backoffice\contentment\lee-was-here.svg" />
+    <None Include="App_Plugins\Contentment\backoffice\icons\icon-contentment.svg" />
+    <None Include="App_Plugins\Contentment\backoffice\icons\icon-discord.svg" />
+    <None Include="App_Plugins\Contentment\backoffice\icons\icon-facebook.svg" />
+    <None Include="App_Plugins\Contentment\backoffice\icons\icon-github.svg" />
+    <None Include="App_Plugins\Contentment\backoffice\icons\icon-instagram.svg" />
+    <None Include="App_Plugins\Contentment\backoffice\icons\icon-linkedin.svg" />
+    <None Include="App_Plugins\Contentment\backoffice\icons\icon-mastodon.svg" />
+    <None Include="App_Plugins\Contentment\backoffice\icons\icon-threads.svg" />
+    <None Include="App_Plugins\Contentment\backoffice\icons\icon-tiktok.svg" />
+    <None Include="App_Plugins\Contentment\backoffice\icons\icon-twitter.svg" />
+    <None Include="App_Plugins\Contentment\backoffice\icons\icon-x-twitter.svg" />
+    <None Include="App_Plugins\Contentment\backoffice\icons\icon-youtube.svg" />
+    <None Include="App_Plugins\Contentment\contentment.js" />
+    <None Include="App_Plugins\Contentment\package.manifest" />
+    <None Include="App_Plugins\Contentment\render\ContentBlockPreview.cshtml" />
+    <None Include="App_Plugins\Contentment\render\_ViewImports.cshtml" />
+    <None Include="App_Plugins\ConditionalDisplayers\package.manifest" />
+    <None Include="App_Plugins\ConditionalDisplayers\prevalueeditors\cdMultivalues.controller.js" />
+    <None Include="App_Plugins\ConditionalDisplayers\propertyeditors\cdSharedLogic.js" />
+    <None Include="App_Plugins\ConditionalDisplayers\propertyeditors\checkbox\checkbox.controller.js" />
+    <None Include="App_Plugins\ConditionalDisplayers\propertyeditors\dropdownFlexible\dropdownFlexible.controller.js" />
+    <None Include="App_Plugins\ConditionalDisplayers\propertyeditors\radio\radio.controller.js" />
+    <None Include="App_Plugins\RegistrationDashboard\dashboard.config.js" />
+    <None Include="App_Plugins\RegistrationDashboard\package.manifest" />
+    <None Include="App_Plugins\MetaMomentum\editorView.controller.js" />
+    <None Include="App_Plugins\MetaMomentum\package.manifest" />
+    <None Include="App_Plugins\MetaMomentum\stripHtml.filter.js" />
+    <None Include="App_Plugins\MetaMomentum\uui-loader.js" />
+    <None Include="App_Plugins\NestingContently\backoffice\nesting-contently.min.js" />
+    <None Include="App_Plugins\NestingContently\package.manifest" />
+    <None Include="App_Plugins\ourHtagEditor\fonts\icomoon.svg" />
+    <None Include="App_Plugins\ourHtagEditor\package.manifest" />
+    <None Include="App_Plugins\ourHtagEditor\scripts\headline.controller.js" />
+    <None Include="App_Plugins\ourHtagEditor\scripts\prevalue.controller.js" />
+    <None Include="App_Plugins\RegistrationDashboard\registrationDashboard.controller.js" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!-- Razor files are needed for the backoffice to work correctly -->
+    <CopyRazorGenerateFilesToPublishDirectory>true</CopyRazorGenerateFilesToPublishDirectory>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Remove RazorCompileOnBuild and RazorCompileOnPublish when not using ModelsMode InMemoryAuto -->
+    <RazorCompileOnBuild>false</RazorCompileOnBuild>
+    <RazorCompileOnPublish>false</RazorCompileOnPublish>
+    <UserSecretsId>c9f8ce86-d689-47dd-a3df-07b81b3569c6</UserSecretsId>
+  </PropertyGroup>
+  
+</Project>

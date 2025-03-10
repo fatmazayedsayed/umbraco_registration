@@ -1,0 +1,48 @@
+﻿@using Umbraco.Cms.Core.Strings
+@using Umbraco.Cms.Core.Models
+@using umbraco_registration.ViewComponents.Blog
+@using Umbraco.Cms.Core.PropertyEditors.ValueConverters
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = "_Master.cshtml";
+
+    var backgroundImage = Model.HasValue("image") ? $"background-image:url({Model.Value<MediaWithCrops>("image").GetCropUrl("hero")}); background-repeat: no-repeat; background-size: cover;" : string.Empty;
+}
+<section class="py-5 text-center" style="@backgroundImage">
+    <div class="container">
+        <div class="row px-5 px-md-0 py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto bg-white bg-opacity-75 rounded-2 p-3">
+                <h1 class="fw-light pt-2">
+                    @{
+                        if (Model.HasValue("heroHeading"))
+                        {
+                            @(Model.Value<string>("heroHeading"))
+                        }
+                        else
+                        {
+                            @Model.Name
+                        }
+                    }
+                </h1>
+                <p class="mt-3">@(Model.Value<DateTime>("displayDate").ToString("D"))</p>
+                @(Model.Value("heroIntroduction"))
+            </div>
+        </div>
+    </div>
+</section>
+<div class="py-5 bg-body-tertiary">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-md-8">
+                <article class="blog-post">
+                    @(Model.Value<HtmlEncodedString>("content"))
+                </article>
+            </div>
+            <div class="col-md-4">
+                <vc:recent-blog-posts content="Model"></vc:recent-blog-posts>
+
+                <vc:blog-categories content="Model"></vc:blog-categories>
+            </div>
+        </div>
+    </div>
+</div>

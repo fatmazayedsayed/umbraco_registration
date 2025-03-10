@@ -1,0 +1,22 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@{
+	Layout = "_Master.cshtml";
+}
+<h2>Register</h2>
+
+<form action="@Url.SurfaceAction("Register", "Registration")" method="post">
+    @Html.AntiForgeryToken()
+    <input type="text" name="name" placeholder="Name" />
+    <input type="email" name="email" placeholder="Email" />
+    <input type="password" name="password" placeholder="Password" />
+    <button type="submit">Register</button>
+</form>
+
+
+
+@if (TempData["Success"] != null)
+{
+    <p>@TempData["Success"]</p>
+}

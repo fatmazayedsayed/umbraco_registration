@@ -1,0 +1,28 @@
+﻿@using umbraco_registration.Extensions
+@using UmbNav.Core.Models
+@inherits UmbracoViewPage
+
+<div class="register-section">
+    <p>If you don’t have an account, you can register below:</p>
+    <a href="/registration" class="btn btn-primary">Register</a>
+</div>
+@foreach (var menuItem in Model.GetSiteSettings().Value<IEnumerable<UmbNavItem>>("footerNavigation"))
+{
+    if (menuItem.Children != null && menuItem.Children.Any())
+    {
+        <div class="col-12 col-md-2 mb-3">
+            <umbnavitem menu-item="menuItem" label-tag-name="h5"></umbnavitem>
+            <ul class="nav flex-column">
+                @foreach (var menuItemChild in menuItem.Children)
+                {
+                    <umbnavitem menu-item="menuItemChild" class="nav-link p-0 text-body-secondary" active-class="active"></umbnavitem>
+                }
+ 
+            </ul>
+
+        </div>
+    }
+
+   
+
+}

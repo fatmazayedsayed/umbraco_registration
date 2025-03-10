@@ -1,0 +1,52 @@
+﻿{
+  "name": "ourHtagEditor",
+  "version": "",
+  "allowPackageTelemetry": true,
+  "propertyEditors": [
+    {
+      "alias": "ourHtagEditor",
+      "name": "Headline",
+      "icon": "icon-oew-heading",
+      "group": "Rich Content",
+      "editor": {
+        "view": "~/App_Plugins/ourHtagEditor/views/headline.editor.html"
+      },
+      "prevalues": {
+        "fields": [
+          {
+            "label": "Options",
+            "description": "Enable/Disable heading sizes/alignments",
+            "key": "options",
+            "view": "~/App_Plugins/ourHtagEditor/views/headline.prevalues.html",
+            "config": {
+              "size": {
+                "options": [ "h1", "h2", "h3", "h4", "h5", "h6" ]
+              },
+              "align": {
+                "options": [ "left", "center", "right" ]
+              }
+            }
+          }
+        ]
+      },
+      "defaultConfig": {
+        "options": {
+          "size": {
+            "default": "h1"
+          },
+          "align": {
+            "default": "left"
+          }
+        }
+      }
+    }
+  ],
+  "javascript": [
+    "~/App_Plugins/ourHtagEditor/scripts/headline.controller.js",
+    "~/App_Plugins/ourHtagEditor/scripts/prevalue.controller.js"
+  ],
+  "css": [
+    "~/App_Plugins/ourHtagEditor/css/headline.icons.css",
+    "~/App_Plugins/ourHtagEditor/css/headline.styles.css"
+  ]
+}

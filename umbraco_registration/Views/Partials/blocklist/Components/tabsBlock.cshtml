@@ -1,0 +1,39 @@
+﻿@using Umbraco.Cms.Core.PropertyEditors.ValueConverters
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Strings
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockListItem>
+@{
+    var content = Model.Content;
+    var settings = Model.Settings;
+
+    var backgroundColour = string.Empty;
+    if (settings != null)
+    {
+        backgroundColour = $"bg-{settings.Value<ColorPickerValueConverter.PickedColor>("backgroundColour")?.Label.ToLower().Replace(" ", "-")}";
+    }
+
+    var tabItems = content.Value<IEnumerable<BlockListItem>>("items")?.Select(x => x.Content).ToList();
+}
+<div class="py-5 @backgroundColour">
+    <div class="container">
+        <partial name="~/Views/Partials/blocklist/Components/blockHeading.cshtml" model="Model" />
+        <div class="row justify-content-center g-3 mt-3">
+            <ul class="nav nav-tabs" id="tabs-@content.Key.ToString("N")" role="tablist">
+                @foreach (var tabButton in tabItems)
+                {
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link @Html.If(tabButton == tabItems.First(), "active")" id="tab-@tabButton.Key.ToString("N")" data-bs-toggle="tab" data-bs-target="#tab-pane-@tabButton.Key.ToString("N")" type="button" role="tab" aria-controls="tab-pane-@tabButton.Key.ToString("N")" aria-selected="true">@tabButton.Value("title")</button>
+                    </li>
+                }
+            </ul>
+            <div class="tab-content" id="tabs-content-@content.Key.ToString("N")">
+                @foreach (var tabPane in tabItems)
+                {
+                    <div class="tab-pane fade show @Html.If(tabPane == tabItems.First(), "active")" id="tab-pane-@tabPane.Key.ToString("N")" role="tabpanel" aria-labelledby="tab-@tabPane.Key.ToString("N")" tabindex="0">
+                        @(tabPane.Value<IHtmlEncodedString>("content"))
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

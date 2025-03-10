@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<rewrite>
+	<rules>
+		<!-- UmbCheckout Rewrites -->
+		<rule name="ProductCategory" stopProcessing="true">
+			<match url="^(.*)/category/(.+)/$" />
+			<action type="Rewrite" url="{R:1}/?category={R:2}" />
+		</rule>
+	</rules>
+</rewrite>

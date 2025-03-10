@@ -1,0 +1,16 @@
+﻿@using umbraco_registration.Extensions
+@inherits UmbracoViewPage
+<ul class="list-unstyled d-flex">
+    @{
+        var socialLinks = Model.GetSiteSettings().Value<IEnumerable<SocialLink>>("socialIcons");
+        foreach (var socialLink in socialLinks)
+        {
+            <li class="ms-3">
+                <a href="@socialLink.Url">
+                    <i class="bi-@socialLink.Network"></i>
+                    <span class="visually-hidden">@socialLink.Name</span>
+                </a>
+            </li>
+        }
+    }
+</ul>

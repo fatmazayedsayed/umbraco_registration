@@ -1,0 +1,38 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockListItem>
+@{
+    var content = Model.Content;
+    var fieldName = $"{content.Key:N}";
+    var label = content.Value<string>("label");
+    var placeholder = content.Value<string>("placeholder");
+    var rows = content.Value<int>("rows");
+    var autoComplete = content.Value<bool>("autocomplete");
+    var maximumLength = content.Value<int>("maximumLength");
+    var validation = content.Value<string>("validationType");
+    var validationRegex = !string.IsNullOrEmpty(validation) && validation == "customValidation" ? content.Value<string>("customValidationRegex") : validation;
+    var validationErrorMessage = content.HasValue("validationErrorMessage") ? content.Value<string>("validationErrorMessage") : "Please enter a valid value";
+
+    string? fieldValue = null;
+    if (TempData["FieldValues"] != null)
+    {
+        var fieldValues = (Dictionary<string, string>)TempData["FieldValues"];
+        fieldValue = fieldValues.FirstOrDefault(x => x.Key == fieldName).Value;
+    }
+
+    var defaultValue = !string.IsNullOrEmpty(fieldValue) ? fieldValue : content.Value<string>("defaultValue");
+}
+<div class="mb-3">
+    <label for="@fieldName" class="form-label">@label</label>
+    <textarea class="form-control"
+              name="@fieldName"
+              id="f@(fieldName)"
+              data-umb="@fieldName"
+              rows="@rows"
+          @{if (!string.IsNullOrEmpty(placeholder)) { <text> placeholder="@placeholder" </text> } }
+          @{if (autoComplete) { <text> autocomplete="on" </text> } }
+          @{if (maximumLength > 0) { <text> maxlength="@maximumLength" </text> } }
+          required
+          @{if (!string.IsNullOrEmpty(validationRegex)) { <text> pattern="@Html.Raw(validationRegex)" </text> }}>@defaultValue</textarea>
+    <div class="invalid-feedback">
+        @validationErrorMessage
+    </div>
+</div>

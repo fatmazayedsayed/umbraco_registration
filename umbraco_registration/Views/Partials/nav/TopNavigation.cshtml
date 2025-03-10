@@ -1,0 +1,46 @@
+﻿@using umbraco_registration.Extensions
+@using UmbNav.Core.Extensions
+@using UmbNav.Core.Models
+@inherits UmbracoViewPage
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Main Navigation">
+    <div class="container">
+        <a class="navbar-brand" href="/">@Model.GetSiteSettings()?.Value("siteName")</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavigation" aria-controls="mainNavigation" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavigation">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                @foreach (var menuItem in Model.GetSiteSettings().Value<IEnumerable<UmbNavItem>>("topNavigation"))
+                {
+                    if (menuItem.Children != null && menuItem.Children.Any())
+                    {
+                        <li class="nav-item dropdown">
+                            <umbnavitem menu-item="menuItem" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" active-class="active"></umbnavitem>
+                            <ul class="dropdown-menu">
+                                <a class="dropdown-item" href="@menuItem.Url()" target="@menuItem.Target">Go to: @menuItem.Name</a>
+                                @foreach (var menuChild in menuItem.Children)
+                                {
+                                    <umbnavitem menu-item="menuChild" class="dropdown-item" active-class="active"></umbnavitem>
+                                }
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <umbnavitem menu-item="menuItem" class="nav-link" active-class="active"></umbnavitem>
+                        </li>
+                    }
+                }
+                <li class="nav-item">
+                    <vc:basket-link basket-alias="basket" link-name="Basket" link-type="SubTotal" link-css-class="nav-link"></vc:basket-link>
+                </li>
+            </ul>
+
+            <form role="search" method="get" action="@Model.GetProductsPage()?.Url()#results">
+                <input class="form-control" name="keywords" type="search" placeholder="@Umbraco.GetDictionaryValue("Search Products Placeholder")" aria-label="Search">
+            </form>
+        </div>
+    </div>
+</nav>

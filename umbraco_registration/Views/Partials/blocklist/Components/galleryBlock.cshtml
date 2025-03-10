@@ -1,0 +1,37 @@
+﻿@using Umbraco.Cms.Core.PropertyEditors.ValueConverters
+@using Umbraco.Cms.Core.Models
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockListItem>
+@{
+    var content = Model.Content;
+    var settings = Model.Settings;
+
+    var backgroundColour = string.Empty;
+    if (settings != null)
+    {
+        backgroundColour = $"bg-{settings.Value<ColorPickerValueConverter.PickedColor>("backgroundColour")?.Label.ToLower().Replace(" ", "-")}";
+    }
+
+    SmidgeHelper.RequiresCss("/lib/glightbox/css/glightbox.min.css");
+    SmidgeHelper.RequiresJs("/lib/glightbox/js/glightbox.min.js", "/scripts/lightbox.js");
+}
+<div class="py-5 @backgroundColour">
+    <div class="container">
+        <partial name="~/Views/Partials/blocklist/Components/blockHeading.cshtml" model="Model" />
+        <div class="row justify-content-center g-3 mt-3">
+            @if (content.HasValue("images") && content.Value<IEnumerable<MediaWithCrops>>("images").Any())
+            {
+                <div class="row">
+                    @foreach (var image in content.Value<IEnumerable<MediaWithCrops>>("images"))
+                    {
+                        <div class="col-12 col-lg-6 col-xl-4 my-3 text-center">
+                            <a class="gallery-item" href="@image.GetCropUrl("large")" data-gallery="@content.Key.ToString("N")" data-type="image" data-width="900px"
+                               data-height="auto">
+                                <img src="@(image.GetCropUrl("thumbnail"))." class="d-block mx-lg-auto img-fluid rounded-2 shadow" alt="@(image.Value("alt"))" width="380" height="250" loading="lazy">
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

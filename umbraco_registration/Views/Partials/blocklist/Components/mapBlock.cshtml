@@ -1,0 +1,21 @@
+﻿@using Umbraco.Cms.Core.PropertyEditors.ValueConverters
+@using Bergmania.OpenStreetMap.Core
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockListItem>
+@{
+    var content = Model.Content;
+    var settings = Model.Settings;
+
+    var backgroundColour = string.Empty;
+    if (settings != null)
+    {
+        backgroundColour = $"bg-{settings.Value<ColorPickerValueConverter.PickedColor>("backgroundColour")?.Label.ToLower().Replace(" ", "-")}";
+    }
+}
+<div class="py-5 @backgroundColour">
+    <div class="container">
+        <partial name="~/Views/Partials/blocklist/Components/blockHeading.cshtml" model="Model" />
+        <div class="row justify-content-center g-3 mt-3">
+            @(content.Value<OpenStreetMapModel>("map"))
+        </div>
+    </div>
+</div>

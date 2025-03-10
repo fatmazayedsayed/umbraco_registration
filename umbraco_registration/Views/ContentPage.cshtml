@@ -1,0 +1,7 @@
+﻿@using Umbraco.Cms.Core.Models.Blocks
+@inherits UmbracoViewPage
+@{
+    Layout = "_Master.cshtml";
+}
+<partial name="Partials/Hero" />
+@await Html.GetBlockListHtmlAsync(Model.Value<BlockListModel>("contentBlocks"))

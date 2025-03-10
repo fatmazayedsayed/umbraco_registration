@@ -1,0 +1,15 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockListItem>
+@{
+    var content = Model.Content;
+    var hasHeading = content.HasValue("heading");
+    var hasIntroduction = content.HasValue("introduction");
+}
+<div our-if="hasHeading || hasIntroduction" class="row justify-content-center">
+    <div class="col-12 text-center">
+        <h2 our-if="hasHeading" class="fw-light">@content.Value("heading")</h2>
+        @if (hasIntroduction)
+        {
+            @content.Value("introduction");
+        }
+    </div>
+</div>

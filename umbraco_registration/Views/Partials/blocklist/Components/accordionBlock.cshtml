@@ -1,0 +1,39 @@
+﻿@using Umbraco.Cms.Core.PropertyEditors.ValueConverters
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Strings
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockListItem>
+@{
+    var content = Model.Content;
+    var settings = Model.Settings;
+
+    var backgroundColour = string.Empty;
+    if (settings != null)
+    {
+        backgroundColour = $"bg-{settings.Value<ColorPickerValueConverter.PickedColor>("backgroundColour")?.Label.ToLower().Replace(" ", "-")}";
+    }
+}
+<div class="py-5 @backgroundColour">
+    <div class="container">
+        <partial name="~/Views/Partials/blocklist/Components/blockHeading.cshtml" model="Model"/>
+        <div class="row justify-content-center g-3 mt-3">
+            <div class="accordion" id="accordion-@content.Key.ToString("N")" itemscope itemtype="https://schema.org/FAQPage">
+                @foreach (var item in content.Value<IEnumerable<BlockListItem>>("items").Select(x => x.Content))
+                {
+                    var id = item.Key.ToString("N");
+                    <div class="accordion-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                        <h3 class="accordion-header" id="heading-collapse-f-@id">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-f-@id" aria-expanded="true" aria-controls="collapse-f-@id" itemprop="name">
+                                @(item.Value<string>("title"))
+                            </button>
+                        </h3>
+                        <div id="collapse-f-@id" class="accordion-collapse collapse " aria-labelledby="heading-collapse-f-@id" data-bs-parent="#accordion-@content.Key.ToString("N")" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                            <div class="accordion-body" itemprop="text">
+                                @(item.Value<IHtmlEncodedString>("content"))
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

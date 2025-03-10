@@ -1,0 +1,38 @@
+﻿@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.PropertyEditors.ValueConverters
+@inherits UmbracoViewPage
+@{
+    var backgroundImage = Model.HasValue("backgroundImage") ? $"background-image:url({Model.Value<MediaWithCrops>("backgroundImage").GetCropUrl("hero")}); background-repeat: no-repeat; background-size: cover;" : string.Empty;
+    var backgroundColour = Model.HasValue("backgroundColour") ? $"background-color:#{Model.Value<ColorPickerValueConverter.PickedColor>("backgroundColour")};" : string.Empty;
+}
+<section class="py-5 text-center" style="@backgroundImage @backgroundColour">
+    <div class="container">
+        <div class="row px-5 px-md-0 py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto bg-white bg-opacity-75 rounded-2 p-3">
+                <h1 class="fw-light">
+                    @{
+                        if (Model.HasValue("heroHeading"))
+                        {
+                            @(Model.Value<string>("heroHeading"))
+                        }
+                        else
+                        {
+                            @Model.Name
+                        }
+                    }
+                </h1>
+                @(Model.Value("heroIntroduction"))
+                @if (Model.HasValue("heroButtons"))
+                {
+                    <p>
+                        @foreach (var button in Model.Value<IEnumerable<BlockListItem>>("heroButtons")?.Select(x => x.Content))
+                        {
+                            <a href="@(button.Value<Link>("link").Url)" target="@(button.Value<Link>("link").Target)" class="btn @button.Value("type") my-2">@(button.Value<Link>("link").Name)</a>
+                        }
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+</section>

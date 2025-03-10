@@ -1,0 +1,27 @@
+﻿@inherits Umbraco.Cms.Web.Common.Macros.PartialViewMacroPage
+@using Umbraco.Cms.Core.Routing
+
+@inject IPublishedUrlProvider PublishedUrlProvider
+@*
+    This snippet makes a breadcrumb of parents using an unordered HTML list.
+
+    How it works:
+    - It uses the Ancestors() method to get all parents and then generates links so the visitor can go back
+    - Finally it outputs the name of the current page (without a link)
+*@
+
+@{ var selection = Model?.Content.Ancestors().ToArray(); }
+
+@if (selection?.Length > 0)
+{
+    <nav aria-label="breadcrumb" class="d-flex justify-content-center mt-3">
+        <ol class="breadcrumb">
+            @foreach (var item in selection.OrderBy(x => x.Level))
+            {
+                <li class="breadcrumb-item"><a href="@item.Url(PublishedUrlProvider)">@item.Name</a></li>
+            }
+
+            <li class="breadcrumb-item active">@Model?.Content.Name</li>
+        </ol>
+    </nav>
+}

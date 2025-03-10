@@ -1,0 +1,131 @@
+﻿@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Strings
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<umbraco_registration.ViewModels.ProductsViewModel>
+@{
+    Layout = "_Master.cshtml";
+}
+<partial name="Partials/Hero" model="Model.Content" />
+@await Html.GetBlockListHtmlAsync(Model.Content.Value<BlockListModel>("contentBlocks"))
+<div class="py-5 bg-body-tertiary" id="results">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="row justify-content-center">
+                    <div class="col-12 text-center">
+                        <h2 class="fw-light">@Model.Content.Value("heading")</h2>
+                        @Model.Content.Value("introduction")
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col d-flex justify-content-between">
+                        <button class="btn btn-primary btn-sm d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasResponsive" aria-controls="offcanvasResponsive">
+                            @Umbraco.GetDictionaryValue("Filter Products Button")
+                        </button>
+                    </div>
+                </div>
+                @if (Model.SearchResponse is { SearchResults: not null } && Model.SearchResponse.SearchResults.Items.Any())
+                {
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 mt-3">
+                        @foreach (var product in Model.SearchResponse.SearchResults.Items)
+                        {
+                            <div class="col d-flex">
+                                <div class="card shadow-sm">
+                                    <img class="card-img-top" src="@(product.Value<IEnumerable<MediaWithCrops>>("photos").FirstOrDefault().GetCropUrl("thumbnail"))" role="img" preserveAspectRatio="xMidYMid slice" focusable="false" />
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title">@product.Value("productName")</h5>
+                                        <p class="card-text flex-grow-1">@(product.Value<string>("description")?.Truncate(265))</p>
+                                        <div class="d-grid">
+                                            <a href="@product.Url()" class="btn btn-primary stretched-link">@Umbraco.GetDictionaryValue("View Product Button")</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col d-flex justify-content-center">
+                            <paging page-no="Model.SearchResponse.Criteria.CurrentPage"
+                                    query-string-key-page-no="page"
+                                    query-string-key-page-size="size"
+                                    url-template="?page={0}&size={1}&keywords=@(Model.SearchResponse?.Criteria.Keywords)#results"
+                                    page-size="Model.SearchResponse.Criteria.PageSize"
+                                    total-records="(int)Model.SearchResponse.SearchResults.TotalResults"
+                                    render-mode="Bootstrap5"
+                                    show-total-records="false"
+                                    show-total-pages="false"
+                                    show-page-size-nav="false">
+                            </paging>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="row mt-3">
+                        <div class="col">
+                            @(Model.Content.Value<IHtmlEncodedString>("noProductsMessage"))
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="sidebar sticky-sidebar col-lg ms-lg-5 offcanvas-lg offcanvas-end" tabindex="-1" id="offcanvasResponsive" aria-labelledby="offcanvasResponsiveLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasResponsiveLabel">@Umbraco.GetDictionaryValue("Filter Products Label")</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasResponsive" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body d-flex justify-content-lg-end flex-column">
+                    <form id="homes-filter" method="get" action="@Model.Content.Url()#results">
+
+                        <fieldset>
+                            <legend class="d-none d-lg-block">@Umbraco.GetDictionaryValue("Filter Products Label")</legend>
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="form-label" for="l-keywords">Keywords</label>
+                                    @if (!string.IsNullOrEmpty(Model.SearchResponse.Criteria.Keywords) || !string.IsNullOrEmpty(Model.SearchResponse.Criteria.Category))
+                                    {
+                                        <a class="clear-filter" href="@Model.Content.Url()#results">@Umbraco.GetDictionaryValue("Clear Filters Button")</a>
+                                    }
+                                </div>
+                                <input class="form-control" id="l-keywords" type="search" name="keywords" value="@Model.SearchResponse?.Criteria.Keywords" placeholder="@Umbraco.GetDictionaryValue("Search Products Placeholder")" autocomplete="off">
+                            </div>
+
+                            @{
+                                await RenderDropDownGroupSingle("category", "Category Filter Label", Model.Categories, Model.SearchResponse?.Criteria.Category, true);
+                            }
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Search</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    async Task RenderDropDownGroupSingle<T>(string id, string dictionaryKey, IEnumerable<T>? items, string? criteria, bool allowEmptyOption = false)
+    {
+        if (items == null || !items.Any())
+        {
+            return;
+        }
+
+        <div class="mb-3">
+            <label class="form-label" for="l-@id">@Umbraco.GetDictionaryValue(dictionaryKey)</label>
+            <div>
+                <select class="form-select" name="@id" id="l-@id" autocomplete="off" data-bs-placeholder="@Umbraco.GetDictionaryValue(dictionaryKey)">
+                    @if (allowEmptyOption)
+                    {
+                        <option value="">@Umbraco.GetDictionaryValue("Please Select Select Option")</option>
+                    }
+                    @foreach (var item in items)
+                    {
+                        <option value="@item.ToString().ToLower()" selected="@(!string.IsNullOrEmpty(criteria) && criteria.Equals(item.ToString().ToLower()))">@item</option>
+                    }
+                </select>
+            </div>
+        </div>
+    }
+}
