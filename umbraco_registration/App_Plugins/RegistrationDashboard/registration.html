@@ -7,6 +7,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
+                    <th>ProductId</th>
                     <th>Created Date</th>
                 </tr>
             </thead>
@@ -14,6 +15,7 @@
                 <tr ng-repeat="item in vm.registrationData">
                     <td>{{ item.Name }}</td>
                     <td>{{ item.Email }}</td>
+                    <td>{{ item.productId }}</td>
                     <td>{{ item.CreatedDate | date:'medium' }}</td>
                 </tr>
             </tbody>

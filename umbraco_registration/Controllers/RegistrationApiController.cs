@@ -19,7 +19,7 @@ using Umbraco.Cms.Web.Common.Controllers;
         using (var scope = _scopeProvider.CreateScope())
         {
             var database = scope.Database;
-            var registrations = database.Fetch<dynamic>("SELECT Name, Email, CreatedDate FROM Registration");
+            var registrations = database.Fetch<dynamic>("SELECT Name, Email, productId,CreatedDate FROM Registration");
             return Ok(registrations);
         }
     }

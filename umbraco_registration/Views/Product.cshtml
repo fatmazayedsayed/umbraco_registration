@@ -33,6 +33,8 @@
                 @await Umbraco.RenderMacroAsync("Breadcrumbs")
             </div>
         </div>
+        <partial name="_register" model="@Model.Id" />
+
     </div>
 </section>
 <div class="py-5 bg-body-tertiary">
